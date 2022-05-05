@@ -67,6 +67,7 @@ namespace BrickBreaker
             int ballY = this.Height - paddle.height - 80;
 
             // Creates a new ball
+            Random Randgen = new Random();
             int xSpeed = 6;
             int ySpeed = 6;
             int ballSize = 20;

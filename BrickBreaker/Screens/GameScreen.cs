@@ -45,7 +45,6 @@ namespace BrickBreaker
             OnStart();
         }
 
-
         public void OnStart()
         {
             //set life counter

@@ -72,7 +72,14 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="InstructionScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InstructionScreen.Designer.cs">
+      <DependentUpon>InstructionScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Paddle.cs" />
+    <Compile Include="PowerUp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\MenuScreen.cs">

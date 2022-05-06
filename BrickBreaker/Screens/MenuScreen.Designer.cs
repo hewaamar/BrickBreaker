@@ -41,9 +41,10 @@
             this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playButton.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playButton.Location = new System.Drawing.Point(221, 173);
+            this.playButton.Location = new System.Drawing.Point(488, 195);
+            this.playButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(194, 77);
+            this.playButton.Size = new System.Drawing.Size(291, 116);
             this.playButton.TabIndex = 0;
             this.playButton.Text = "Play";
             this.playButton.UseVisualStyleBackColor = false;
@@ -55,9 +56,10 @@
             this.exitButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitButton.Location = new System.Drawing.Point(221, 274);
+            this.exitButton.Location = new System.Drawing.Point(488, 496);
+            this.exitButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(194, 77);
+            this.exitButton.Size = new System.Drawing.Size(291, 116);
             this.exitButton.TabIndex = 1;
             this.exitButton.Text = "Exit";
             this.exitButton.UseVisualStyleBackColor = false;
@@ -71,24 +73,25 @@
             this.instructionLabel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.instructionLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.instructionLabel.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.instructionLabel.Location = new System.Drawing.Point(325, 230);
+            this.instructionLabel.Location = new System.Drawing.Point(488, 345);
+            this.instructionLabel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.instructionLabel.Name = "instructionLabel";
-            this.instructionLabel.Size = new System.Drawing.Size(194, 77);
+            this.instructionLabel.Size = new System.Drawing.Size(291, 116);
             this.instructionLabel.TabIndex = 2;
             this.instructionLabel.Text = "instructionLabel";
             this.instructionLabel.UseVisualStyleBackColor = false;
             // 
             // MenuScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Controls.Add(this.instructionLabel);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.playButton);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MenuScreen";
-            this.Size = new System.Drawing.Size(854, 542);
-
+            this.Size = new System.Drawing.Size(1281, 813);
             this.ResumeLayout(false);
 
         }

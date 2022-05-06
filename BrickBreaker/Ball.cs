@@ -18,9 +18,7 @@ namespace BrickBreaker
             xSpeed = _xSpeed;
             ySpeed = _ySpeed;
             size = _ballSize;
-
         }
-
         public void Move()
         {
             x = x + xSpeed;
@@ -69,7 +67,6 @@ namespace BrickBreaker
                 ySpeed *= -1;
             }
         }
-
         public bool BottomCollision(UserControl UC)
         {
             Boolean didCollide = false;
@@ -81,6 +78,5 @@ namespace BrickBreaker
 
             return didCollide;
         }
-
     }
 }

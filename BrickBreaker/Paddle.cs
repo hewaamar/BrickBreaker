@@ -11,7 +11,7 @@ namespace BrickBreaker
         {
             x = _x;
             y = _y;
-            width = _width;
+            width = _width; 
             height = _height;
             speed = _speed;
             colour = _colour;

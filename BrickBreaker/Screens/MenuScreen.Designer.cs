@@ -30,6 +30,7 @@
         {
             this.playButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
+            this.instructionLabel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // playButton
@@ -62,15 +63,32 @@
             this.exitButton.UseVisualStyleBackColor = false;
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
+            // instructionLabel
+            // 
+            this.instructionLabel.BackColor = System.Drawing.Color.White;
+            this.instructionLabel.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.instructionLabel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
+            this.instructionLabel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.instructionLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.instructionLabel.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.instructionLabel.Location = new System.Drawing.Point(325, 230);
+            this.instructionLabel.Name = "instructionLabel";
+            this.instructionLabel.Size = new System.Drawing.Size(194, 77);
+            this.instructionLabel.TabIndex = 2;
+            this.instructionLabel.Text = "instructionLabel";
+            this.instructionLabel.UseVisualStyleBackColor = false;
+            // 
             // MenuScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.Controls.Add(this.instructionLabel);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.playButton);
             this.Name = "MenuScreen";
             this.Size = new System.Drawing.Size(854, 542);
+
             this.ResumeLayout(false);
 
         }
@@ -79,5 +97,6 @@
 
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.Button instructionLabel;
     }
 }

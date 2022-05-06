@@ -17,7 +17,7 @@ namespace BrickBreaker
 {
     public partial class GameScreen : UserControl
     {
-        #region global values
+        #region global value
 
         //player1 button control keys - DO NOT CHANGE
         Boolean leftArrowDown, rightArrowDown;
@@ -28,7 +28,11 @@ namespace BrickBreaker
         // Paddle and Ball objects
         Paddle paddle;
         Ball ball;
+        PowerUp powerUp;
 
+        //list of powerups for current level
+        List<PowerUp> p = new List<PowerUp>();
+        int powerUpTimer;
         // list of all blocks for current level
         List<Block> blocks = new List<Block>();
 
@@ -36,6 +40,7 @@ namespace BrickBreaker
         SolidBrush paddleBrush = new SolidBrush(Color.White);
         SolidBrush ballBrush = new SolidBrush(Color.White);
         SolidBrush blockBrush = new SolidBrush(Color.Red);
+        SolidBrush powerupBrush = new SolidBrush(Color.Green);
 
         #endregion
 
@@ -45,9 +50,9 @@ namespace BrickBreaker
             OnStart();
         }
 
-
         public void OnStart()
         {
+            powerUpTimer = 0;
             //set life counter
             lives = 3;
 
@@ -67,6 +72,7 @@ namespace BrickBreaker
             int ballY = this.Height - paddle.height - 80;
 
             // Creates a new ball
+            Random Randgen = new Random();
             int xSpeed = 6;
             int ySpeed = 6;
             int ballSize = 20;
@@ -90,6 +96,13 @@ namespace BrickBreaker
 
             // start the game engine loop
             gameTimer.Enabled = true;
+
+            //setup powerup values for testing purposes
+            int powerUpX = (this.Width / 2);
+            int powerUpY = (this.Height / 2);
+            int powerUpSpeed = 3;
+            int powerUpSize = ballSize / 2;
+            powerUp = new PowerUp(powerUpX, powerUpY, powerUpSpeed, powerUpSize);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -126,6 +139,13 @@ namespace BrickBreaker
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            powerUpTimer++;
+
+            // For powerup addition
+            if (powerUpTimer == 1)
+            {
+                p.Add(powerUp);
+            }
             // Move the paddle
             if (leftArrowDown && paddle.x > 0)
             {
@@ -138,6 +158,12 @@ namespace BrickBreaker
 
             // Move ball
             ball.Move();
+
+            //Drop powerups down
+            foreach (PowerUp powerUp in p)
+            {
+                powerUp.Move();
+            }
 
             // Check for collision with top and side walls
             ball.WallCollision(this);
@@ -160,6 +186,8 @@ namespace BrickBreaker
 
             // Check for collision of ball with paddle, (incl. paddle movement)
             ball.PaddleCollision(paddle);
+
+            //check for collision of powerup with paddle
 
             // Check if ball has collided with any blocks
             foreach (Block b in blocks)
@@ -208,6 +236,12 @@ namespace BrickBreaker
 
             // Draws ball
             e.Graphics.FillRectangle(ballBrush, ball.x, ball.y, ball.size, ball.size);
+
+            //Draws PowerUp
+            foreach (PowerUp powerUp in p )
+            {
+                e.Graphics.FillRectangle(powerupBrush, powerUp.x, powerUp.y, powerUp.size, powerUp.size);
+            }
         }
     }
 }

@@ -6,10 +6,13 @@ namespace BrickBreaker
 {
     public class Ball
     {
-        public int x, y, xSpeed, ySpeed, size;
+        public int x, y, xSpeed, ySpeed, size, bounceDirection;
         public Color colour;
 
         public static Random rand = new Random();
+
+        
+ 
 
         public Ball(int _x, int _y, int _xSpeed, int _ySpeed, int _ballSize)
         {
@@ -21,6 +24,8 @@ namespace BrickBreaker
 
         }
 
+      
+
         public void Move()
         {
             x = x + xSpeed;
@@ -29,12 +34,15 @@ namespace BrickBreaker
 
         public bool BlockCollision(Block b)
         {
+
+            
             Rectangle blockRec = new Rectangle(b.x, b.y, b.width, b.height);
             Rectangle ballRec = new Rectangle(x, y, size, size);
 
             if (ballRec.IntersectsWith(blockRec))
             {
-                ySpeed *= -1;
+                ySpeed *= rand.Next(-2, -1);
+                xSpeed *= rand.Next(-2, -1);
             }
 
             return blockRec.IntersectsWith(ballRec);
@@ -48,6 +56,7 @@ namespace BrickBreaker
             if (ballRec.IntersectsWith(paddleRec))
             {
                 ySpeed *= -1;
+                
             }
         }
 

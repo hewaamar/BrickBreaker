@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
+using System.Xml;
 
 namespace BrickBreaker
 {
@@ -19,6 +20,7 @@ namespace BrickBreaker
     {
         #region global value
 
+        Random r = new Random();
         //player1 button control keys - DO NOT CHANGE
         Boolean leftArrowDown, rightArrowDown;
 
@@ -31,8 +33,8 @@ namespace BrickBreaker
         PowerUp powerUp;
 
         //list of powerups for current level
-        List<PowerUp> p = new List<PowerUp>();
-        int powerUpTimer;
+        List<PowerUp> powerups = new List<PowerUp>();
+        int powerUpCheck;
         // list of all blocks for current level
         List<Block> blocks = new List<Block>();
 
@@ -44,6 +46,9 @@ namespace BrickBreaker
 
         #endregion
 
+        //game values
+        int currentLevel;
+
         public GameScreen()
         {
             InitializeComponent();
@@ -52,7 +57,6 @@ namespace BrickBreaker
 
         public void OnStart()
         {
-            powerUpTimer = 0;
             //set life counter
             lives = 3;
 
@@ -78,10 +82,7 @@ namespace BrickBreaker
             int ballSize = 20;
             ball = new Ball(ballX, ballY, xSpeed, ySpeed, ballSize);
 
-            #region Creates blocks for generic level. Need to replace with code that loads levels.
-            
-            //TODO - replace all the code in this region eventually with code that loads levels from xml files
-            
+            //go to next level
             blocks.Clear();
             int x = 10;
 
@@ -90,21 +91,68 @@ namespace BrickBreaker
                 x += 57;
                 Block b1 = new Block(x, 10, 1, Color.White);
                 blocks.Add(b1);
+
             }
-
-            #endregion
-
+           // nextLevel();
+       
             // start the game engine loop
             gameTimer.Enabled = true;
 
             //setup powerup values for testing purposes
-            int powerUpX = (this.Width / 2);
-            int powerUpY = (this.Height / 2);
+            int powerUpX;
+            int powerUpY;
             int powerUpSpeed = 3;
             int powerUpSize = ballSize / 2;
-            powerUp = new PowerUp(powerUpX, powerUpY, powerUpSpeed, powerUpSize);
+
         }
 
+        //code to go from one level to the next
+        //public void nextLevel()
+        //{
+        //    blocks.Clear();
+        //    string level = $"level0{currentLevel}.xml";
+
+        //    try
+        //    {
+        //        XmlReader reader = XmlReader.Create(level);
+
+        //        int newX, newY, newHp, newWidth, newHeight;
+        //        Color newColour;
+
+        //        while (reader.Read())
+        //        {
+        //            if (reader.NodeType == XmlNodeType.Text)
+        //            {
+        //                newX = Convert.ToInt32(reader.ReadString());
+
+        //                reader.ReadToNextSibling("y");
+        //                newY = Convert.ToInt32(reader.ReadString());
+
+        //                reader.ReadToNextSibling("hp");
+        //                newHp = Convert.ToInt32(reader.ReadString());
+
+        //                reader.ReadToNextSibling("width");
+        //                newWidth = Convert.ToInt32(reader.ReadString());
+
+        //                reader.ReadToNextSibling("height");
+        //                newHeight = Convert.ToInt32(reader.ReadString());
+
+        //                reader.ReadToNextSibling("colour");
+        //                newColour = Color.FromName(reader.ReadString());
+
+        //                Block b = new Block(newX, newY, newHp, newWidth, newHeight, newColour);
+        //                blocks.Add(b);
+        //            }
+        //        }
+        //        reader.Close();
+        //    }
+        //    catch
+        //    {
+        //        //if level doesnt exist then switch to either winner or loser screen
+        //        return;
+        //    }
+
+        //}
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //player 1 button presses
@@ -139,13 +187,6 @@ namespace BrickBreaker
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            powerUpTimer++;
-
-            // For powerup addition
-            if (powerUpTimer == 1)
-            {
-                p.Add(powerUp);
-            }
             // Move the paddle
             if (leftArrowDown && paddle.x > 0)
             {
@@ -160,7 +201,7 @@ namespace BrickBreaker
             ball.Move();
 
             //Drop powerups down
-            foreach (PowerUp powerUp in p)
+            foreach (PowerUp powerUp in powerups)
             {
                 powerUp.Move();
             }
@@ -187,15 +228,42 @@ namespace BrickBreaker
             // Check for collision of ball with paddle, (incl. paddle movement)
             ball.PaddleCollision(paddle);
 
-            //check for collision of powerup with paddle
+            //Check for collision of powerup and paddle
 
+            try
+            {
+                foreach (PowerUp p in powerups)
+                {
+                    powerUp.PaddleCollide(paddle);
+                    if (p.y >= paddle.y)
+                    {
+                        powerups.Remove(powerUp);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
             // Check if ball has collided with any blocks
             foreach (Block b in blocks)
             {
                 if (ball.BlockCollision(b))
                 {
+                    
                     blocks.Remove(b);
 
+                    //check if powerups spawn
+                    powerUpCheck = r.Next(0, 2);
+                    if (powerUpCheck == 1)
+                    {
+                        int powerUpX = b.x;
+                        int powerUpY = b.y;
+                        int powerUpSpeed = 3;
+                        int powerUpSize = 10;
+                        powerUp = new PowerUp(powerUpX, powerUpY, powerUpSpeed, powerUpSize);
+                        powerups.Add(powerUp);
+                    }
                     if (blocks.Count == 0)
                     {
                         gameTimer.Enabled = false;
@@ -238,7 +306,7 @@ namespace BrickBreaker
             e.Graphics.FillRectangle(ballBrush, ball.x, ball.y, ball.size, ball.size);
 
             //Draws PowerUp
-            foreach (PowerUp powerUp in p )
+            foreach (PowerUp powerUp in powerups )
             {
                 e.Graphics.FillRectangle(powerupBrush, powerUp.x, powerUp.y, powerUp.size, powerUp.size);
             }

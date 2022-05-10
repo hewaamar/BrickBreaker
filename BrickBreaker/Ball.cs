@@ -13,7 +13,6 @@ namespace BrickBreaker
 
         
  
-
         public Ball(int _x, int _y, int _xSpeed, int _ySpeed, int _ballSize)
         {
             x = _x;

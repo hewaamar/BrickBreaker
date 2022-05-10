@@ -83,7 +83,17 @@ namespace BrickBreaker
             ball = new Ball(ballX, ballY, xSpeed, ySpeed, ballSize);
 
             //go to next level
-            nextLevel();
+            blocks.Clear();
+            int x = 10;
+
+            while (blocks.Count < 12)
+            {
+                x += 57;
+                Block b1 = new Block(x, 10, 1, Color.White);
+                blocks.Add(b1);
+
+            }
+           // nextLevel();
        
             // start the game engine loop
             gameTimer.Enabled = true;
@@ -97,52 +107,52 @@ namespace BrickBreaker
         }
 
         //code to go from one level to the next
-        public void nextLevel()
-        {
-            blocks.Clear();
-            string level = $"level0{currentLevel}.xml";
+        //public void nextLevel()
+        //{
+        //    blocks.Clear();
+        //    string level = $"level0{currentLevel}.xml";
 
-            try
-            {
-                XmlReader reader = XmlReader.Create(level);
+        //    try
+        //    {
+        //        XmlReader reader = XmlReader.Create(level);
 
-                int newX, newY, newHp, newWidth, newHeight;
-                Color newColour;
+        //        int newX, newY, newHp, newWidth, newHeight;
+        //        Color newColour;
 
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Text)
-                    {
-                        newX = Convert.ToInt32(reader.ReadString());
+        //        while (reader.Read())
+        //        {
+        //            if (reader.NodeType == XmlNodeType.Text)
+        //            {
+        //                newX = Convert.ToInt32(reader.ReadString());
 
-                        reader.ReadToNextSibling("y");
-                        newY = Convert.ToInt32(reader.ReadString());
+        //                reader.ReadToNextSibling("y");
+        //                newY = Convert.ToInt32(reader.ReadString());
 
-                        reader.ReadToNextSibling("hp");
-                        newHp = Convert.ToInt32(reader.ReadString());
+        //                reader.ReadToNextSibling("hp");
+        //                newHp = Convert.ToInt32(reader.ReadString());
 
-                        reader.ReadToNextSibling("width");
-                        newWidth = Convert.ToInt32(reader.ReadString());
+        //                reader.ReadToNextSibling("width");
+        //                newWidth = Convert.ToInt32(reader.ReadString());
 
-                        reader.ReadToNextSibling("height");
-                        newHeight = Convert.ToInt32(reader.ReadString());
+        //                reader.ReadToNextSibling("height");
+        //                newHeight = Convert.ToInt32(reader.ReadString());
 
-                        reader.ReadToNextSibling("colour");
-                        newColour = Color.FromName(reader.ReadString());
+        //                reader.ReadToNextSibling("colour");
+        //                newColour = Color.FromName(reader.ReadString());
 
-                        Block b = new Block(newX, newY, newHp, newWidth, newHeight, newColour);
-                        blocks.Add(b);
-                    }
-                }
-                reader.Close();
-            }
-            catch
-            {
-                //if level doesnt exist then switch to either winner or loser screen
-                return;
-            }
+        //                Block b = new Block(newX, newY, newHp, newWidth, newHeight, newColour);
+        //                blocks.Add(b);
+        //            }
+        //        }
+        //        reader.Close();
+        //    }
+        //    catch
+        //    {
+        //        //if level doesnt exist then switch to either winner or loser screen
+        //        return;
+        //    }
 
-        }
+        //}
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //player 1 button presses

@@ -20,6 +20,7 @@ namespace BrickBreaker
     {
         #region global value
 
+        Random r = new Random();
         //player1 button control keys - DO NOT CHANGE
         Boolean leftArrowDown, rightArrowDown;
 
@@ -32,8 +33,8 @@ namespace BrickBreaker
         PowerUp powerUp;
 
         //list of powerups for current level
-        List<PowerUp> p = new List<PowerUp>();
-        int powerUpTimer;
+        List<PowerUp> powerups = new List<PowerUp>();
+        int powerUpCheck;
         // list of all blocks for current level
         List<Block> blocks = new List<Block>();
 
@@ -56,7 +57,6 @@ namespace BrickBreaker
 
         public void OnStart()
         {
-            powerUpTimer = 0;
             //set life counter
             lives = 3;
 
@@ -89,11 +89,11 @@ namespace BrickBreaker
             gameTimer.Enabled = true;
 
             //setup powerup values for testing purposes
-            int powerUpX = (this.Width / 2);
-            int powerUpY = (this.Height / 2);
+            int powerUpX;
+            int powerUpY;
             int powerUpSpeed = 3;
             int powerUpSize = ballSize / 2;
-            powerUp = new PowerUp(powerUpX, powerUpY, powerUpSpeed, powerUpSize);
+
         }
 
         //code to go from one level to the next
@@ -177,13 +177,6 @@ namespace BrickBreaker
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            powerUpTimer++;
-
-            // For powerup addition
-            if (powerUpTimer == 1)
-            {
-                p.Add(powerUp);
-            }
             // Move the paddle
             if (leftArrowDown && paddle.x > 0)
             {
@@ -198,7 +191,7 @@ namespace BrickBreaker
             ball.Move();
 
             //Drop powerups down
-            foreach (PowerUp powerUp in p)
+            foreach (PowerUp powerUp in powerups)
             {
                 powerUp.Move();
             }
@@ -225,15 +218,42 @@ namespace BrickBreaker
             // Check for collision of ball with paddle, (incl. paddle movement)
             ball.PaddleCollision(paddle);
 
-            //check for collision of powerup with paddle
+            //Check for collision of powerup and paddle
 
+            try
+            {
+                foreach (PowerUp p in powerups)
+                {
+                    powerUp.PaddleCollide(paddle);
+                    if (p.y >= paddle.y)
+                    {
+                        powerups.Remove(powerUp);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
             // Check if ball has collided with any blocks
             foreach (Block b in blocks)
             {
                 if (ball.BlockCollision(b))
                 {
+                    
                     blocks.Remove(b);
 
+                    //check if powerups spawn
+                    powerUpCheck = r.Next(0, 2);
+                    if (powerUpCheck == 1)
+                    {
+                        int powerUpX = b.x;
+                        int powerUpY = b.y;
+                        int powerUpSpeed = 3;
+                        int powerUpSize = 10;
+                        powerUp = new PowerUp(powerUpX, powerUpY, powerUpSpeed, powerUpSize);
+                        powerups.Add(powerUp);
+                    }
                     if (blocks.Count == 0)
                     {
                         gameTimer.Enabled = false;
@@ -276,7 +296,7 @@ namespace BrickBreaker
             e.Graphics.FillRectangle(ballBrush, ball.x, ball.y, ball.size, ball.size);
 
             //Draws PowerUp
-            foreach (PowerUp powerUp in p )
+            foreach (PowerUp powerUp in powerups )
             {
                 e.Graphics.FillRectangle(powerupBrush, powerUp.x, powerUp.y, powerUp.size, powerUp.size);
             }

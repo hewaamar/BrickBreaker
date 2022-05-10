@@ -44,6 +44,8 @@ namespace BrickBreaker
 
         #endregion
 
+
+
         public GameScreen()
         {
             InitializeComponent();

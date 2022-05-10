@@ -13,9 +13,10 @@ namespace BrickBreaker
         public int height = 25;
 
         public int x;
-        public int y; 
+        public int y;
         public int hp;
         public Color colour;
+       // public SolidBrush brush;
 
         public static Random rand = new Random();
 
@@ -23,8 +24,11 @@ namespace BrickBreaker
         {
             x = _x;
             y = _y;
-            hp = _hp;
+            //hp = _hp;
+            //width = _width;
+            //height = _height;
             colour = _colour;
+            //brush = new SolidBrush(colour);
         }
     }
 }

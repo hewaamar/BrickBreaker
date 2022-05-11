@@ -22,7 +22,7 @@ namespace BrickBreaker
 
         Random r = new Random();
         //player1 button control keys - DO NOT CHANGE
-        Boolean leftArrowDown, rightArrowDown;
+        Boolean leftArrowDown, rightArrowDown, spaceBarDown;
 
         // Game values
         int lives;
@@ -63,13 +63,13 @@ namespace BrickBreaker
             //set all button presses to false.
             leftArrowDown = rightArrowDown = false;
 
-            // setup starting paddle values and create paddle object
+            //charlie player
             int paddleWidth = 80;
             int paddleHeight = 20;
             int paddleX = ((this.Width / 2) - (paddleWidth / 2));
             int paddleY = (this.Height - paddleHeight) - 60;
             int paddleSpeed = 8;
-            paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, paddleSpeed, Color.White);
+            paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, paddleSpeed, Color.Khaki);
 
             // setup starting ball values
             int ballX = this.Width / 2 - 10;
@@ -107,52 +107,52 @@ namespace BrickBreaker
         }
 
         //code to go from one level to the next
-        //public void nextLevel()
-        //{
-        //    blocks.Clear();
-        //    string level = $"level0{currentLevel}.xml";
+        public void nextLevel()
+        {
+            blocks.Clear();
+            string level = $"level0{currentLevel}.xml";
 
-        //    try
-        //    {
-        //        XmlReader reader = XmlReader.Create(level);
+            try
+            {
+                XmlReader reader = XmlReader.Create(level);
 
-        //        int newX, newY, newHp, newWidth, newHeight;
-        //        Color newColour;
+                int newX, newY, newHp, newWidth, newHeight;
+                Color newColour;
 
-        //        while (reader.Read())
-        //        {
-        //            if (reader.NodeType == XmlNodeType.Text)
-        //            {
-        //                newX = Convert.ToInt32(reader.ReadString());
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Text)
+                    {
+                        newX = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("y");
-        //                newY = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("y");
+                        newY = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("hp");
-        //                newHp = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("hp");
+                        newHp = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("width");
-        //                newWidth = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("width");
+                        newWidth = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("height");
-        //                newHeight = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("height");
+                        newHeight = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("colour");
-        //                newColour = Color.FromName(reader.ReadString());
+                        reader.ReadToNextSibling("colour");
+                        newColour = Color.FromName(reader.ReadString());
 
-        //                Block b = new Block(newX, newY, newHp, newWidth, newHeight, newColour);
-        //                blocks.Add(b);
-        //            }
-        //        }
-        //        reader.Close();
-        //    }
-        //    catch
-        //    {
-        //        //if level doesnt exist then switch to either winner or loser screen
-        //        return;
-        //    }
+                        Block b = new Block(newX, newY, newHp, /*newWidth, newHeight,*/ newColour);
+                        blocks.Add(b);
+                    }
+                }
+                reader.Close();
+            }
+            catch
+            {
+                //if level doesnt exist then switch to either winner or loser screen
+                return;
+            }
 
-        //}
+        }
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //player 1 button presses

@@ -37,8 +37,8 @@ namespace BrickBreaker
 
             if (ballRec.IntersectsWith(blockRec))
             {
-                ySpeed *= rand.Next(-2, -1);
-                xSpeed *= rand.Next(-2, -1);
+                ySpeed *= -1;
+                xSpeed *= -1;
             }
 
             return blockRec.IntersectsWith(ballRec);

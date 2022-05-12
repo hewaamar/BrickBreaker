@@ -19,6 +19,7 @@ namespace BrickBreaker
     public partial class GameScreen : UserControl
     {
         #region global value
+        int powerUpTimer;
 
         Random r = new Random();
         //player1 button control keys - DO NOT CHANGE
@@ -43,6 +44,8 @@ namespace BrickBreaker
         SolidBrush ballBrush = new SolidBrush(Color.White);
         SolidBrush blockBrush = new SolidBrush(Color.Red);
         SolidBrush powerupBrush = new SolidBrush(Color.Green);
+
+
 
         #endregion
 
@@ -103,7 +106,6 @@ namespace BrickBreaker
             int powerUpY;
             int powerUpSpeed = 3;
             int powerUpSize = ballSize / 2;
-
         }
 
         //code to go from one level to the next
@@ -187,6 +189,12 @@ namespace BrickBreaker
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            powerUpTimer--;
+            if (powerUpTimer >= 0)
+            {
+                powerUpTimerLabel.Visible = true;
+                powerUpTimerLabel.Text = $"{powerUpTimer}";
+            }
             // Move the paddle
             if (leftArrowDown && paddle.x > 0)
             {
@@ -229,12 +237,34 @@ namespace BrickBreaker
             ball.PaddleCollision(paddle);
 
             //Check for collision of powerup and paddle
-
             try
             {
                 foreach (PowerUp p in powerups)
                 {
-                    powerUp.PaddleCollide(paddle);
+                    if (powerUp.PaddleCollide(paddle))
+                    {
+                        int powerUpchoice = r.Next(1,11);
+                        //start poweruptimer 
+                        powerUpTimer = 800;
+                        //increase length of  (comment back in after testing others)
+                        if (powerUpchoice > 8)
+                        {
+                            paddle.width = paddle.width + 50;
+                        }
+                        //add life
+                        else if (powerUpchoice == 2)
+                        { lives++; }
+                        //speed up paddle and shorten it
+                        else if (powerUpchoice == 3 || powerUpchoice == 4 || powerUpchoice == 5)
+                        {
+                            paddle.speed = paddle.speed + 4;
+                            paddle.width = paddle.width - 20;
+                        }
+                        else if (powerUpchoice == 6 || powerUpchoice == 7)
+                        { //increase ball size
+                          ball.size = ball.size + ball.size / 2;
+                        }
+                    }
                     if (p.y >= paddle.y)
                     {
                         powerups.Remove(powerUp);
@@ -274,6 +304,11 @@ namespace BrickBreaker
                 }
             }
 
+            if (powerUpTimer == 0)
+            {
+                Reset_PowerUps();
+            }
+
             //redraw the screen
             Refresh();
         }
@@ -310,6 +345,14 @@ namespace BrickBreaker
             {
                 e.Graphics.FillRectangle(powerupBrush, powerUp.x, powerUp.y, powerUp.size, powerUp.size);
             }
+        }
+        public void Reset_PowerUps()
+        {
+            powerUpTimerLabel.Visible = false;
+            paddle.width = 80;
+            paddle.height = 20;
+            paddle.speed = 8;
+            ball.size = 20;
         }
     }
 }

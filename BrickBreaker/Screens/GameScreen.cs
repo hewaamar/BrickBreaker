@@ -19,10 +19,11 @@ namespace BrickBreaker
     public partial class GameScreen : UserControl
     {
         #region global value
+        int powerUpTimer;
 
         Random r = new Random();
         //player1 button control keys - DO NOT CHANGE
-        Boolean leftArrowDown, rightArrowDown;
+        Boolean leftArrowDown, rightArrowDown, spaceBarDown;
 
         // Game values
         int lives;
@@ -44,6 +45,8 @@ namespace BrickBreaker
         SolidBrush blockBrush = new SolidBrush(Color.Red);
         SolidBrush powerupBrush = new SolidBrush(Color.Green);
 
+
+
         #endregion
 
         //game values
@@ -63,13 +66,13 @@ namespace BrickBreaker
             //set all button presses to false.
             leftArrowDown = rightArrowDown = false;
 
-            // setup starting paddle values and create paddle object
+            //charlie player
             int paddleWidth = 80;
             int paddleHeight = 20;
             int paddleX = ((this.Width / 2) - (paddleWidth / 2));
             int paddleY = (this.Height - paddleHeight) - 60;
             int paddleSpeed = 8;
-            paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, paddleSpeed, Color.White);
+            paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, paddleSpeed, Color.Khaki);
 
             // setup starting ball values
             int ballX = this.Width / 2 - 10;
@@ -103,56 +106,55 @@ namespace BrickBreaker
             int powerUpY;
             int powerUpSpeed = 3;
             int powerUpSize = ballSize / 2;
-
         }
 
         //code to go from one level to the next
-        //public void nextLevel()
-        //{
-        //    blocks.Clear();
-        //    string level = $"level0{currentLevel}.xml";
+        public void nextLevel()
+        {
+            blocks.Clear();
+            string level = $"level0{currentLevel}.xml";
 
-        //    try
-        //    {
-        //        XmlReader reader = XmlReader.Create(level);
+            try
+            {
+                XmlReader reader = XmlReader.Create(level);
 
-        //        int newX, newY, newHp, newWidth, newHeight;
-        //        Color newColour;
+                int newX, newY, newHp, newWidth, newHeight;
+                Color newColour;
 
-        //        while (reader.Read())
-        //        {
-        //            if (reader.NodeType == XmlNodeType.Text)
-        //            {
-        //                newX = Convert.ToInt32(reader.ReadString());
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Text)
+                    {
+                        newX = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("y");
-        //                newY = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("y");
+                        newY = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("hp");
-        //                newHp = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("hp");
+                        newHp = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("width");
-        //                newWidth = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("width");
+                        newWidth = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("height");
-        //                newHeight = Convert.ToInt32(reader.ReadString());
+                        reader.ReadToNextSibling("height");
+                        newHeight = Convert.ToInt32(reader.ReadString());
 
-        //                reader.ReadToNextSibling("colour");
-        //                newColour = Color.FromName(reader.ReadString());
+                        reader.ReadToNextSibling("colour");
+                        newColour = Color.FromName(reader.ReadString());
 
-        //                Block b = new Block(newX, newY, newHp, newWidth, newHeight, newColour);
-        //                blocks.Add(b);
-        //            }
-        //        }
-        //        reader.Close();
-        //    }
-        //    catch
-        //    {
-        //        //if level doesnt exist then switch to either winner or loser screen
-        //        return;
-        //    }
+                        Block b = new Block(newX, newY, newHp, /*newWidth, newHeight,*/ newColour);
+                        blocks.Add(b);
+                    }
+                }
+                reader.Close();
+            }
+            catch
+            {
+                //if level doesnt exist then switch to either winner or loser screen
+                return;
+            }
 
-        //}
+        }
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //player 1 button presses
@@ -187,6 +189,12 @@ namespace BrickBreaker
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            powerUpTimer--;
+            if (powerUpTimer >= 0)
+            {
+                powerUpTimerLabel.Visible = true;
+                powerUpTimerLabel.Text = $"{powerUpTimer}";
+            }
             // Move the paddle
             if (leftArrowDown && paddle.x > 0)
             {
@@ -229,12 +237,34 @@ namespace BrickBreaker
             ball.PaddleCollision(paddle);
 
             //Check for collision of powerup and paddle
-
             try
             {
                 foreach (PowerUp p in powerups)
                 {
-                    powerUp.PaddleCollide(paddle);
+                    if (powerUp.PaddleCollide(paddle))
+                    {
+                        int powerUpchoice = r.Next(1,11);
+                        //start poweruptimer 
+                        powerUpTimer = 800;
+                        //increase length of  (comment back in after testing others)
+                        if (powerUpchoice > 8)
+                        {
+                            paddle.width = paddle.width + 50;
+                        }
+                        //add life
+                        else if (powerUpchoice == 2)
+                        { lives++; }
+                        //speed up paddle and shorten it
+                        else if (powerUpchoice == 3 || powerUpchoice == 4 || powerUpchoice == 5)
+                        {
+                            paddle.speed = paddle.speed + 4;
+                            paddle.width = paddle.width - 20;
+                        }
+                        else if (powerUpchoice == 6 || powerUpchoice == 7)
+                        { //increase ball size
+                          ball.size = ball.size + ball.size / 2;
+                        }
+                    }
                     if (p.y >= paddle.y)
                     {
                         powerups.Remove(powerUp);
@@ -274,6 +304,11 @@ namespace BrickBreaker
                 }
             }
 
+            if (powerUpTimer == 0)
+            {
+                Reset_PowerUps();
+            }
+
             //redraw the screen
             Refresh();
         }
@@ -310,6 +345,14 @@ namespace BrickBreaker
             {
                 e.Graphics.FillRectangle(powerupBrush, powerUp.x, powerUp.y, powerUp.size, powerUp.size);
             }
+        }
+        public void Reset_PowerUps()
+        {
+            powerUpTimerLabel.Visible = false;
+            paddle.width = 80;
+            paddle.height = 20;
+            paddle.speed = 8;
+            ball.size = 20;
         }
     }
 }

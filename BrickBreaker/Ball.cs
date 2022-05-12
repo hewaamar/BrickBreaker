@@ -51,6 +51,7 @@ namespace BrickBreaker
 
             Rectangle blockRec = new Rectangle(b.x, b.y, b.width, b.height);
             Rectangle ballRec = new Rectangle(x, y, size, size);
+
             while (true)
             {
                 if (ballRec.IntersectsWith(blockRec))
@@ -63,7 +64,6 @@ namespace BrickBreaker
                     {
                         xSpeed *= -1;
                     }
-                   
 
                     if (ySpeed <= 0.2 && xSpeed >= -0.2)
                     {

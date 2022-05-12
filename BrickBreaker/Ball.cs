@@ -6,7 +6,8 @@ namespace BrickBreaker
 {
     public class Ball
     {
-        public int x, y, xSpeed, ySpeed, size, bounceDirection;
+        public int x, y, size, defaultSpeed;
+        public double xSpeed, ySpeed;
         public Color colour;
 
         public static Random rand = new Random();
@@ -24,8 +25,24 @@ namespace BrickBreaker
 
         public void Move()
         {
-            x = x + xSpeed;
-            y = y + ySpeed;
+            x = Convert.ToInt32(x + xSpeed);
+            y = Convert.ToInt32(y + ySpeed);
+            if (xSpeed == 0.1)
+            {
+                xSpeed *= -1.5;
+            }
+            else if (xSpeed >= 10)
+            {
+                xSpeed *= -1;
+            }
+            if (ySpeed == 0.1)
+            {
+                ySpeed *= -1.5;
+            }
+            else if (ySpeed >= 10)
+            {
+                ySpeed *= -1;
+            }
         }
 
         public bool BlockCollision(Block b)
@@ -35,6 +52,30 @@ namespace BrickBreaker
             Rectangle blockRec = new Rectangle(b.x, b.y, b.width, b.height);
             Rectangle ballRec = new Rectangle(x, y, size, size);
 
+            while (true)
+            {
+                if (ballRec.IntersectsWith(blockRec))
+                {
+                    if(xSpeed <= 0.2 && xSpeed >= -0.2)
+                    {
+                        xSpeed *= rand.Next(Convert.ToInt32(-1.5), -1);
+                    }
+                    else
+                    {
+                        xSpeed *= -1;
+                    }
+
+                    if (ySpeed <= 0.2 && xSpeed >= -0.2)
+                    {
+                        ySpeed = -2;
+                    }
+                    else
+                    {
+                        ySpeed *= -1;
+                    }
+                    
+                }
+                
                 return blockRec.IntersectsWith(ballRec);
             }
         }
@@ -46,9 +87,87 @@ namespace BrickBreaker
 
             if (ballRec.IntersectsWith(paddleRec))
             {
-                ySpeed *= -1;
-                
+                x = p.x + size/2;
+                y = p.y - size;
+                ySpeed *= -1.5;
+
+                xSpeed *= 1;
+
+                if (xSpeed < 0.2 && xSpeed > -0.2)
+                {
+                    xSpeed = rand.Next(1, 3);
+                }
+                else if (xSpeed > 9 || xSpeed < -9)
+                {
+                    xSpeed *= 0.5;
+                }
+                else if (ySpeed < 0.5 && ySpeed > -0.5)
+                {
+                    ySpeed *= rand.Next(Convert.ToInt32(-1.5), -1);
+                }
+                else if (ySpeed > 9 || ySpeed < -9)
+                {
+                    ySpeed *= rand.Next(-1, Convert.ToInt32(-0.5));
+                }
+
+
+
             }
+        }
+        //public void RandomDirection()
+        //{
+        //    //change angle
+        //    int xDifAngle = rand.Next(0, 2);
+        //    int yDifAngle = rand.Next(0, 2);
+
+        //    //change speed depending on original direction
+        //    if (xSpeed > 0)
+        //    {
+        //        xSpeed = defaultSpeed;
+        //        xSpeed += xDifAngle;
+        //    }
+        //    else
+        //    {
+        //        xSpeed = -defaultSpeed;
+        //        xSpeed -= xDifAngle;
+        //    }
+
+        //    if (ySpeed > 0)
+        //    {
+        //        ySpeed = defaultSpeed;
+        //        ySpeed += yDifAngle;
+        //    }
+        //    else
+        //    {
+        //        ySpeed = -defaultSpeed;
+        //        ySpeed -= yDifAngle;
+        //    }
+        //}
+        public void Movement()
+        {
+
+            //if (xSpeed == 0 || ySpeed == 0)
+            //{
+            //    ySpeed += 5;
+            //    xSpeed += 5;
+            //}
+            if(xSpeed > 0)
+            {
+                xSpeed *= rand.Next(1, 3);
+            }
+            else if(ySpeed > 0)
+            {
+                ySpeed *= rand.Next(-1, 3);
+            }
+            else if(ySpeed <= 0)
+            {
+                ySpeed *= -1;
+            }
+            else if (xSpeed <= 0)
+            {
+                xSpeed *= -1;
+            }
+
         }
 
         public void WallCollision(UserControl UC)
@@ -69,6 +188,9 @@ namespace BrickBreaker
                 ySpeed *= -1;
             }
         }
+
+      
+
         public bool BottomCollision(UserControl UC)
         {
             Boolean didCollide = false;
